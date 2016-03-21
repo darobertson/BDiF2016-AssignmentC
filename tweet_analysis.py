@@ -21,3 +21,7 @@ df.registerTempTable("df")
 lang_en_tweet = sqlContext.sql("SELECT * FROM df WHERE lang = 'en'")
 lang_en_tweet.registerTempTable("lang_en_tweet")
 
+# keep tweets where Gooogle is mentioned
+google_tweet = sqlCOntext.sql("SELECT * FROM lang_en_tweet WHERE text like '%Google%' or text like '%google%'")
+
+
