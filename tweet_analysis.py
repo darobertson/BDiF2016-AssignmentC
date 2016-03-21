@@ -21,7 +21,15 @@ df.registerTempTable("df")
 lang_en_tweet = sqlContext.sql("SELECT * FROM df WHERE lang = 'en'")
 lang_en_tweet.registerTempTable("lang_en_tweet")
 
-# keep tweets where Gooogle is mentioned
+# keep tweets where Gooogle is mentioned and save the query as text file
 google_tweet = sqlCOntext.sql("SELECT * FROM lang_en_tweet WHERE text like '%Google%' or text like '%google%'")
+google_tweet.write.text("/user/root/google_tweet.txt")
 
+# exported text file
+logFile = "/user/root/google_tweet.txt" 
+logData = sc.textFile(logFile).cache()
 
+numAndroid = logData.filter(lambda s: 'Android' in s).count()
+numChrome = logData.filter(lambda s: 'Chrome' in s).count()
+
+print("Tweets with Android mentioned: %i, tweets with Chrome mentioned: %i" % (numAndroid, numChrome))
